@@ -147,7 +147,7 @@ async def forum_monitor_loop(page, seen_threads):
     while True:
         try:
             # Wait for some thread-like item to appear
-            await page.wait_for_selector('div[role="list"].content_d125d2 li.card_f369db[data-item-role="item"]', timeout=15000)
+            await page.wait_for_selector('div[role="list"].content_d125d2 li.card_f369db[data-item-role="item"]', timeout=60000)
 
             thread_elements = await page.query_selector_all(
                 'div[role="list"].content_d125d2 li.card_f369db[data-item-role="item"]'
