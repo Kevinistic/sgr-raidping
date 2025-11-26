@@ -204,8 +204,8 @@ async def forum_monitor_loop(page, seen_threads):
                     print("[i] Page reload failed; page/browser closed.")
                     return
 
-        except PlaywrightError:
-            print("[i] Playwright Error (likely page/browser closed). Stopping monitor loop.")
+        except PlaywrightError as e:
+            print(f"[i] Playwright Error: {e}")
             return
         except Exception as e:
             print(f"[Error] {e}. Retrying in 10 seconds...")
@@ -217,7 +217,17 @@ async def run():
 
     async with async_playwright() as p:
         print("[+] Launching Chromium...")
-        browser = await p.chromium.launch(headless=HEADLESS, args=["--disable-blink-features=AutomationControlled"])
+        browser = await p.chromium.launch(
+            headless=True,
+            args=[
+                "--disable-blink-features=AutomationControlled",
+                "--disable-gpu",
+                "--no-sandbox",
+                "--disable-dev-shm-usage",
+                "--disable-software-rasterizer"
+            ]
+        )
+
         context = await browser.new_context(
             viewport={"width": 1280, "height": 720},
             storage_state=STATE_FILE if os.path.exists(STATE_FILE) else None
